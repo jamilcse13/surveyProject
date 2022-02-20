@@ -4,21 +4,21 @@ from . models import Survey, Question, Option, Answer
 class SurveySerializer(serializers.ModelSerializer):
     class Meta:
         model = Survey
-        fields = ['title']
+        fields = ['id', 'title']
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ['question', 'survey_id']
+        fields = ['id', 'question', 'survey_id']
 
 
 class OptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Option
-        fields = ['name', 'question_id']
+        fields = ['id', 'name', 'question_id']
 
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = ['option_id', 'question_id', 'customer_id']
+        fields = ['id', 'option_id', 'question_id', 'customer_id']

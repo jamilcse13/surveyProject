@@ -1,71 +1,71 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
 from . models import Survey, Question, Option, Answer
 from . serializers import SurveySerializer, QuestionSerializer, OptionSerializer, AnswerSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 
 # Create your views here.
-@csrf_exempt
+@api_view(['GET', 'POST'])
 def CreateSurvey(request):
     if request.method == 'GET':
         survey = Survey.objects.all()
         serializer = SurveySerializer(survey, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        return Response(serializer.data)
 
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = SurveySerializer(data = data)
+        serializer = SurveySerializer(data = request.data)
+        
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
-@csrf_exempt
+@api_view(['GET', 'POST'])
 def CreateQuestion(request):
     if request.method == 'GET':
         question = Question.objects.all()
         serializer = QuestionSerializer(question, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        return Response(serializer.data)
 
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = QuestionSerializer(data = data)
+        serializer = QuestionSerializer(data = request.data)
+
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@csrf_exempt
+@api_view(['GET', 'POST'])
 def CreateOption(request):
     if request.method == 'GET':
         option = Option.objects.all()
         serializer = OptionSerializer(option, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        return Response(serializer.data)
 
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = OptionSerializer(data = data)
+        serializer = OptionSerializer(data = request.data)
+        
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@csrf_exempt
+@api_view(['GET', 'POST'])
 def CreateAnswer(request):
     if request.method == 'GET':
         answer = Answer.objects.all()
         serializer = AnswerSerializer(answer, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        return Response(serializer.data)
 
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = AnswerSerializer(data = data)
+        serializer = AnswerSerializer(data = request.data)
+        
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
