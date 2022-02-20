@@ -1,19 +1,21 @@
 from django.shortcuts import render
+from django.http import Http404
 from . models import Survey, Question, Option, Answer
 from . serializers import SurveySerializer, QuestionSerializer, OptionSerializer, AnswerSerializer, SurveyDetailSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
 
 # Create your views here.
-@api_view(['GET', 'POST'])
-def CreateSurvey(request):
-    if request.method == 'GET':
+
+class SurveyList(APIView):
+    def get(self, request):
         survey = Survey.objects.all()
         serializer = SurveySerializer(survey, many=True)
         return Response(serializer.data)
-
-    elif request.method == 'POST':
+    
+    def post(self, request):
         serializer = SurveySerializer(data = request.data)
         
         if serializer.is_valid():
@@ -22,15 +24,13 @@ def CreateSurvey(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-@api_view(['GET', 'POST'])
-def CreateQuestion(request):
-    if request.method == 'GET':
+class QuestionList(APIView):
+    def get(self, request):
         question = Question.objects.all()
         serializer = QuestionSerializer(question, many=True)
         return Response(serializer.data)
-
-    elif request.method == 'POST':
+    
+    def post(self, request):
         serializer = QuestionSerializer(data = request.data)
 
         if serializer.is_valid():
@@ -39,14 +39,12 @@ def CreateQuestion(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'POST'])
-def CreateOption(request):
-    if request.method == 'GET':
+class OptionList(APIView):
+    def get(self, request):
         option = Option.objects.all()
         serializer = OptionSerializer(option, many=True)
         return Response(serializer.data)
-
-    elif request.method == 'POST':
+    def post(self, request):
         serializer = OptionSerializer(data = request.data)
         
         if serializer.is_valid():
@@ -55,14 +53,13 @@ def CreateOption(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'POST'])
-def CreateAnswer(request):
-    if request.method == 'GET':
+class AnswerList(APIView):
+    def get(self, request):
         answer = Answer.objects.all()
         serializer = AnswerSerializer(answer, many=True)
         return Response(serializer.data)
-
-    elif request.method == 'POST':
+    
+    def post(self, request):
         serializer = AnswerSerializer(data = request.data)
         
         if serializer.is_valid():
@@ -71,13 +68,14 @@ def CreateAnswer(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
-def SurveyDetails(request, survey_id):
-    try:
-        survey = Survey.objects.get(pk = survey_id)
-    except Survey.DoesNotExist:
-        return Response(status=404)
+class SurveyDetails(APIView):
+    def get_object(self, survey_id):
+        try:
+            return Survey.objects.get(pk = survey_id)
+        except Survey.DoesNotExist:
+            raise Http404
     
-    if request.method == 'GET':
+    def get(self, request, survey_id):
+        survey = self.get_object(survey_id)
         serializer = SurveyDetailSerializer(survey)
         return Response(serializer.data)
