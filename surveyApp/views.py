@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from . models import Survey, Question, Option, Answer
-from . serializers import SurveySerializer, QuestionSerializer, OptionSerializer, AnswerSerializer
+from . serializers import SurveySerializer, QuestionSerializer, OptionSerializer, AnswerSerializer, SurveyDetailSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -69,3 +69,15 @@ def CreateAnswer(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def SurveyDetails(request, survey_id):
+    try:
+        survey = Survey.objects.get(pk = survey_id)
+    except Survey.DoesNotExist:
+        return Response(status=404)
+    
+    if request.method == 'GET':
+        serializer = SurveyDetailSerializer(survey)
+        return Response(serializer.data)

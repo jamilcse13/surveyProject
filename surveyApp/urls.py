@@ -6,4 +6,5 @@ urlpatterns = [
     path('question/', views.CreateQuestion, name='create-question'),
     path('option/', views.CreateOption, name='create-option'),
     path('answer/', views.CreateAnswer, name='create-answer'),
+    path('survey-details/<int:survey_id>', views.SurveyDetails, name="survey-details")
 ]

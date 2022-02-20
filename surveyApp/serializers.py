@@ -22,3 +22,8 @@ class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
         fields = ['id', 'option_id', 'question_id', 'customer_id']
+
+class SurveyDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Survey
+        fields = ['id', 'title']
