@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from . models import Survey, Question
-from . serializers import SurveySerializer
+from . serializers import SurveySerializer, QuestionSerializer
 
 # Create your views here.
 @csrf_exempt
@@ -23,19 +23,37 @@ def CreateSurvey(request):
 
 
 
-# @csrf_exempt
-# def CreateQuestion(request):
-#     if request.method == 'POST':
-#         question = request.POST['question']
-#         survey_id = request.POST['survey-id']
-#         # survey = get_object_or_404(Question, survey_id=survey_id)
-#         survey = Question.objects.create(question=question, survey_id=survey_id)
-#         survey.save()
-#         message = "OKAY, got and saved your question"
-#     elif request.method == 'GET':
-#         message = "Use POST method"
+@csrf_exempt
+def CreateQuestion(request):
+    if request.method == 'GET':
+        question = Question.objects.all()
+        serializer = QuestionSerializer(question, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = QuestionSerializer(data = data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
+
+
+
+
+
+
+    # if request.method == 'POST':
+    #     # question = request.POST['question']
+    #     # survey_id = request.POST['survey-id']
+    #     # survey = get_object_or_404(Question, survey_id=survey_id)
+    #     survey = Question.objects.create(question=question, survey_id=survey_id)
+    #     survey.save()
+    #     message = "OKAY, got and saved your question"
+    # elif request.method == 'GET':
+    #     message = "Use POST method"
     
-#     mydictionary = {
-#         "message" : message
-#     }
-#     return JsonResponse(mydictionary)
+    # mydictionary = {
+    #     "message" : message
+    # }
+    # return JsonResponse(mydictionary)
