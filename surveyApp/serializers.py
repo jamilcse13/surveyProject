@@ -21,4 +21,4 @@ class OptionSerializer(serializers.ModelSerializer):
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = ['option_id', 'customer_id']
+        fields = ['option_id', 'question_id', 'customer_id']

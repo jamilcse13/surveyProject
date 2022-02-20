@@ -43,10 +43,11 @@ class Option(models.Model):
 
 class Answer(models.Model):
     option_id = models.ForeignKey(Option, on_delete=models.CASCADE)
+    question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
     customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['option_id']
     
     def __str__(self):
-        return f"{self.option_id}, {self.customer_id}"
+        return f"{self.option_id}, {self.question_id}, {self.customer_id}"
