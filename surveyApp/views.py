@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from . models import Survey, Question
-from . serializers import SurveySerializer, QuestionSerializer
+from . models import Survey, Question, Option, Answer
+from . serializers import SurveySerializer, QuestionSerializer, OptionSerializer, AnswerSerializer
 
 # Create your views here.
 @csrf_exempt
@@ -39,21 +39,33 @@ def CreateQuestion(request):
         return JsonResponse(serializer.errors, status=400)
 
 
+@csrf_exempt
+def CreateOption(request):
+    if request.method == 'GET':
+        option = Option.objects.all()
+        serializer = OptionSerializer(option, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = OptionSerializer(data = data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
 
 
+@csrf_exempt
+def CreateAnswer(request):
+    if request.method == 'GET':
+        answer = Answer.objects.all()
+        serializer = AnswerSerializer(answer, many=True)
+        return JsonResponse(serializer.data, safe=False)
 
-
-    # if request.method == 'POST':
-    #     # question = request.POST['question']
-    #     # survey_id = request.POST['survey-id']
-    #     # survey = get_object_or_404(Question, survey_id=survey_id)
-    #     survey = Question.objects.create(question=question, survey_id=survey_id)
-    #     survey.save()
-    #     message = "OKAY, got and saved your question"
-    # elif request.method == 'GET':
-    #     message = "Use POST method"
-    
-    # mydictionary = {
-    #     "message" : message
-    # }
-    # return JsonResponse(mydictionary)
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = AnswerSerializer(data = data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
