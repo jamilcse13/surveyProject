@@ -30,8 +30,8 @@ class SurveyList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMo
 class QuestionList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [TokenAuthentication]
+    # permission_classes = [IsAuthenticated]
 
     def get(self, request):
         return self.list(request)
