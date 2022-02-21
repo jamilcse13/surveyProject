@@ -8,15 +8,19 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework import mixins
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
 class SurveyList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     serializer_class = SurveySerializer
     queryset = Survey.objects.all()
-    lookup_field = ['id']
+    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
-    def get(self, request, id=None):
+    def get(self, request):
         return self.list(request)
     
     def post(self, request):
@@ -26,9 +30,10 @@ class SurveyList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMo
 class QuestionList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
-    lookup_field = ['id']
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
-    def get(self, request, id=None):
+    def get(self, request):
         return self.list(request)
     
     def post(self, request):
@@ -38,9 +43,10 @@ class QuestionList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Create
 class OptionList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     serializer_class = OptionSerializer
     queryset = Option.objects.all()
-    lookup_field = ['id']
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
-    def get(self, request, id=None):
+    def get(self, request):
         return self.list(request)
     
     def post(self, request):
@@ -50,9 +56,10 @@ class OptionList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMo
 class AnswerList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     serializer_class = AnswerSerializer
     queryset = Answer.objects.all()
-    lookup_field = ['id']
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
-    def get(self, request, id=None):
+    def get(self, request):
         return self.list(request)
     
     def post(self, request):
@@ -64,11 +71,14 @@ class AnswerList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMo
 #     queryset = Survey.objects.all()
 #     lookup_field = ['id']
 
-#     def get(self, request, id=None):
-        return self.retrieve(request)
+#     def get(self, request):
+#         return self.retrieve(request)
 
 
 class SurveyDetails(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get_object(self, survey_id):
         try:
             return Survey.objects.get(pk = survey_id)
