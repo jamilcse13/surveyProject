@@ -6,66 +6,66 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework import generics
+from rest_framework import mixins
 
 # Create your views here.
 
-class SurveyList(APIView):
-    def get(self, request):
-        survey = Survey.objects.all()
-        serializer = SurveySerializer(survey, many=True)
-        return Response(serializer.data)
+class SurveyList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    serializer_class = SurveySerializer
+    queryset = Survey.objects.all()
+    lookup_field = ['id']
+
+    def get(self, request, id=None):
+        return self.list(request)
     
     def post(self, request):
-        serializer = SurveySerializer(data = request.data)
-        
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return self.create(request)
 
 
-class QuestionList(APIView):
-    def get(self, request):
-        question = Question.objects.all()
-        serializer = QuestionSerializer(question, many=True)
-        return Response(serializer.data)
+class QuestionList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    serializer_class = QuestionSerializer
+    queryset = Question.objects.all()
+    lookup_field = ['id']
+
+    def get(self, request, id=None):
+        return self.list(request)
     
     def post(self, request):
-        serializer = QuestionSerializer(data = request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return self.create(request)
 
 
-class OptionList(APIView):
-    def get(self, request):
-        option = Option.objects.all()
-        serializer = OptionSerializer(option, many=True)
-        return Response(serializer.data)
-    def post(self, request):
-        serializer = OptionSerializer(data = request.data)
-        
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class OptionList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    serializer_class = OptionSerializer
+    queryset = Option.objects.all()
+    lookup_field = ['id']
 
-
-class AnswerList(APIView):
-    def get(self, request):
-        answer = Answer.objects.all()
-        serializer = AnswerSerializer(answer, many=True)
-        return Response(serializer.data)
+    def get(self, request, id=None):
+        return self.list(request)
     
     def post(self, request):
-        serializer = AnswerSerializer(data = request.data)
-        
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return self.create(request)
+
+
+class AnswerList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    serializer_class = AnswerSerializer
+    queryset = Answer.objects.all()
+    lookup_field = ['id']
+
+    def get(self, request, id=None):
+        return self.list(request)
+    
+    def post(self, request):
+        return self.create(request)
+
+
+# class SurveyDetails(generics.GenericAPIView, mixins.RetrieveModelMixin):
+#     serializer_class = SurveyDetailSerializer
+#     queryset = Survey.objects.all()
+#     lookup_field = ['id']
+
+#     def get(self, request, id=None):
+        return self.retrieve(request)
 
 
 class SurveyDetails(APIView):
@@ -79,3 +79,18 @@ class SurveyDetails(APIView):
         survey = self.get_object(survey_id)
         serializer = SurveyDetailSerializer(survey)
         return Response(serializer.data)
+
+
+# class SurveyList(APIView):
+#     def get(self, request):
+#         survey = Survey.objects.all()
+#         serializer = SurveySerializer(survey, many=True)
+#         return Response(serializer.data)
+    
+#     def post(self, request):
+#         serializer = SurveySerializer(data = request.data)
+        
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
